@@ -1,17 +1,23 @@
 document.addEventListener('DOMContentLoaded', () => {
     const starsContainer = document.querySelector('.starlinks');
     var viewportHeight = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
+    var [randomX, randomY, randomZ] = RandomPos() // setting starter pos
 
-    // y start pos between 50px -> viewportHeight-50px 
-    var randomY = Math.floor(Math.random() * (viewportHeight - 100)) + 50; 
-    // x start pos -200 so when its generated it's not visible
-    var randomX = -200
-    // z is the angle direction if it 0 its going horizontally if its -20 it's going slightly up
-    var randomZ = Math.floor(Math.random() * 11) - 5; // -5 -> 5
-    // if its generated in the lower part of the site and train is going down, change its dir to up
-    // and if its in the upper part, its the other way around
-    if (randomY > viewportHeight/2 && randomZ >0 || randomY < viewportHeight/2 && randomZ <0) {
-        randomZ = -randomZ
+
+    function RandomPos(){
+        // x start pos -200 so when its generated it's not visible
+        var rx = -200
+        // y start pos between 50px -> viewportHeight-50px 
+        var ry = Math.floor(Math.random() * (viewportHeight - 100)) + 50; 
+        // z is the angle direction if it 0 its going horizontally if its -20 it's going slightly up
+        var rz = Math.floor(Math.random() * 11) - 5; // -5 -> 5
+        // if its generated in the lower part of the site and train is going down, change its dir to up
+        // and if its in the upper part, its the other way around
+        if (ry > viewportHeight/2 && rz >0 || ry < viewportHeight/2 && rz <0) {
+            rz = -rz
+        }
+        return [rx,ry,rz]
+        
     }
     
     
@@ -66,12 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 star.style.transform = `translate(${newX}px, ${newY}px)`;
             } else {
                 // Reset the star's position when it goes out of the viewport
-                randomY = Math.floor(Math.random() * (viewportHeight - 100)) + 50; 
-                randomZ = Math.floor(Math.random() * 11) - 5;
-
-                if (randomY > viewportHeight/2 && randomZ >0 || randomY < viewportHeight/2 && randomZ <0) {
-                    randomZ = -randomZ
-                }
+                [randomX, randomY, randomZ] = RandomPos()
 
                 // remove every prev stars
                 stars.forEach((s) => s.remove());    
@@ -100,7 +101,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         return [0, 0];
     }
-    
     
     // Function to handle page visibility changes
     function handleVisibilityChange() {
