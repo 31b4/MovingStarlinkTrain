@@ -5,8 +5,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     function RandomPos(){
-        // x start pos -200 so when its generated it's not visible
-        var rx = -200
+        // x start pos -470 so when its generated it's not visible since the train is 45*10px width
+        var rx = -470
         // y start pos between 50px -> viewportHeight-50px 
         var ry = Math.floor(Math.random() * (viewportHeight - 100)) + 50; 
         // z is the angle direction if it 0 its going horizontally if its -20 it's going slightly up
@@ -17,28 +17,35 @@ document.addEventListener('DOMContentLoaded', () => {
             rz = -rz
         }
         return [rx,ry,rz]
-        
     }
     
     
     Start()// start train on load
 
     //start a timer if something goes wrong its restarts the train generation
-    var timer = setInterval(Start, 19000);
+    var timer = setInterval(Start, 30000);
     var userGone = false // user clicks off the site
     var exit = true // train is off the website
 
 
     // Start funciton, reset everything
     function Start(){
-        for (let i = 0; i < 20; i++) {
+        for (let i = 0; i < 45; i++) {
             createStar(i);
         }
         updateStarsPosition(); // stating the animation
     }
 
-
+    function SpaceBetweenChance(){
+        var chance = Math.floor(Math.random() * 100) + 1;
+        if (chance >=65) {
+            return true
+        }
+    }
     function createStar(index) {
+        if (SpaceBetweenChance()) {
+            return
+        }
         const star = document.createElement('div');
         star.classList.add('starlink');
         star.style.top = `${randomY + (randomZ * index)}px`; // Adjust the vertical position
@@ -64,11 +71,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const [currentX, currentY] = extractTranslateValues(currentTransform);
             
             // Move the star in straight with the other stars
-            const newX = currentX + (10 / 5) // deviding by 5 to slow down
-            const newY = currentY + (randomZ / 5)
+            const newX = currentX + (10 / 10) // deviding by 5 to slow down
+            const newY = currentY + (randomZ / 10)
 
             // Check if the star is still within the viewport
-            if (newX < window.innerWidth+200 &&  newX >= 0 ) {
+            if (newX < window.innerWidth+470 &&  newX >= 0 ) {
                 star.style.transform = `translate(${newX}px, ${newY}px)`;
             } else {
                 // Reset the star's position when it goes out of the viewport
@@ -89,7 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // restarting
             clearInterval(timer)
             Start()
-            timer = setInterval(Start, 19000);
+            timer = setInterval(Start, 30000);
         }
     }
 
@@ -109,7 +116,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // resetting the timer
             clearInterval(timer);
             Start()
-            timer = setInterval(Start, 19000);
+            timer = setInterval(Start, 30000);
             userGone = false
         } else {
             // user gone, deleting the starlink
